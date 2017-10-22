@@ -52,7 +52,7 @@ public class DetectLanguage {
 // **********************************************
 
 // Replace the accessKey string value with your valid access key.
-    static String accessKey = "b7f914450ca64905afc8f5050d98958b";
+    static String accessKey = "6982b000b2214c0eb71f4ae1c60945aa";
 
 // Replace or verify the region.
 
@@ -62,7 +62,7 @@ public class DetectLanguage {
 
 // NOTE: Free trial access keys are generated in the westcentralus region, so if you are using
 // a free trial access key, you should not need to change this region.
-    static String host = "https://westus.api.cognitive.microsoft.com";
+    static String host = "https://westcentralus.api.cognitive.microsoft.com";
 
     static String path = "/text/analytics/v2.0/languages";
 
@@ -77,10 +77,10 @@ public class DetectLanguage {
         connection.setRequestProperty("Ocp-Apim-Subscription-Key", accessKey);
         connection.setDoOutput(true);
 
-        DataOutputStream wr = new DataOutputStream(connection.getOutputStream());
-        wr.write(encoded_text, 0, encoded_text.length);
-        wr.flush();
-        wr.close();
+        try (DataOutputStream wr = new DataOutputStream(connection.getOutputStream())) {
+            wr.write(encoded_text, 0, encoded_text.length);
+            wr.flush();
+        }
 
         StringBuilder response = new StringBuilder ();
         BufferedReader in = new BufferedReader(
