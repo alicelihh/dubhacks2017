@@ -47,9 +47,7 @@ public class Main {
     /**
      * @param args the command line arguments
      */
-    public static void main(String[] args) {
-        // TODO code application logic here
-        
+    public static void main(String[] args) {        
         try {
             Documents getSentimentDocument = new Documents ();
             getSentimentDocument.add ("1", "en", "I really enjoy the new XBox One S. It has a clean look, it has 4K/HDR resolution and it is affordable.");
@@ -57,13 +55,7 @@ public class Main {
 
             String responseOne = GetSentiment (getSentimentDocument);
             System.out.println (prettify (responseOne));
-        }
-        
-        catch (Exception e) {
-            System.out.println (e);
-        }
- 
-        try {
+            
             Documents getKeyPhrasesDocument = new Documents ();
             getKeyPhrasesDocument.add ("1", "en", "I really enjoy the new XBox One S. It has a clean look, it has 4K/HDR resolution and it is affordable.");
             getKeyPhrasesDocument.add ("2", "es", "Si usted quiere comunicarse con Carlos, usted debe de llamarlo a su telefono movil. Carlos es muy responsable, pero necesita recibir una notificacion si hay algun problema.");
