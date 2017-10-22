@@ -1,4 +1,4 @@
-package detectlanguage;
+package getsentiment;
 
 import java.io.*;
 import java.net.*;
@@ -13,23 +13,23 @@ import javax.net.ssl.HttpsURLConnection;
  *     version: 2.8.1
  *
  * Once you have compiled or downloaded gson-2.8.1.jar, assuming you have placed it in the
- * same folder as this file (DetectLanguage.java), you can compile and run this program at
+ * same folder as this file (GetSentiment.java), you can compile and run this program at
  * the command line as follows.
  *
- * javac DetectLanguage.java -classpath .;gson-2.8.1.jar -encoding UTF-8
- * java -cp .;gson-2.8.1.jar DetectLanguage
+ * javac GetSentiment.java -classpath .;gson-2.8.1.jar -encoding UTF-8
+ * java -cp .;gson-2.8.1.jar GetSentiment
  */
-        
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
 class Document {
-    public String id, text;
+    public String id, language, text;
 
-    public Document(String id, String text){
+    public Document(String id, String language, String text){
         this.id = id;
+        this.language = language;
         this.text = text;
     }
 }
@@ -40,19 +40,19 @@ class Documents {
     public Documents() {
         this.documents = new ArrayList<Document>();
     }
-    public void add(String id, String text) {
-        this.documents.add (new Document (id, text));
+    public void add(String id, String language, String text) {
+        this.documents.add (new Document (id, language, text));
     }
 }
 
-public class DetectLanguage {
+public class GetSentiment {
 
 // ***********************************************
 // *** Update or verify the following values. ***
 // **********************************************
 
 // Replace the accessKey string value with your valid access key.
-    static String accessKey = "6982b000b2214c0eb71f4ae1c60945aa";
+    static String accessKey = "b7f914450ca64905afc8f5050d98958b";
 
 // Replace or verify the region.
 
@@ -64,9 +64,9 @@ public class DetectLanguage {
 // a free trial access key, you should not need to change this region.
     static String host = "https://westcentralus.api.cognitive.microsoft.com";
 
-    static String path = "/text/analytics/v2.0/languages";
+    static String path = "/text/analytics/v2.0/sentiment";
 
-    public static String GetLanguage (Documents documents) throws Exception {
+    public static String GetSentiment (Documents documents) throws Exception {
         String text = new Gson().toJson(documents);
         byte[] encoded_text = text.getBytes("UTF-8");
 
@@ -77,10 +77,10 @@ public class DetectLanguage {
         connection.setRequestProperty("Ocp-Apim-Subscription-Key", accessKey);
         connection.setDoOutput(true);
 
-        try (DataOutputStream wr = new DataOutputStream(connection.getOutputStream())) {
-            wr.write(encoded_text, 0, encoded_text.length);
-            wr.flush();
-        }
+        DataOutputStream wr = new DataOutputStream(connection.getOutputStream());
+        wr.write(encoded_text, 0, encoded_text.length);
+        wr.flush();
+        wr.close();
 
         StringBuilder response = new StringBuilder ();
         BufferedReader in = new BufferedReader(
@@ -104,11 +104,10 @@ public class DetectLanguage {
     public static void main (String[] args) {
         try {
             Documents documents = new Documents ();
-            documents.add ("1", "This is a document written in English.");
-            documents.add ("2", "Este es un document escrito en Español.");
-            documents.add ("3", "这是一个用中文写的文件");
+            documents.add ("1", "en", "I really enjoy the new XBox One S. It has a clean look, it has 4K/HDR resolution and it is affordable.");
+            documents.add ("2", "es", "Este ha sido un dia terrible, llegué tarde al trabajo debido a un accidente automobilistico.");
 
-            String response = GetLanguage (documents);
+            String response = GetSentiment (documents);
             System.out.println (prettify (response));
         }
         catch (Exception e) {
