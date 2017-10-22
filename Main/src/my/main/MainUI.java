@@ -354,7 +354,8 @@ public class MainUI extends javax.swing.JFrame {
     }
     
     public static void testKeyPhrases(String keyPhrases){
-        String[] flagWord = new String[]{"freaks", "horny", "wild", "terrible"};
+        String[] flagWord = new String[]{"wild", "dumbass", "horny", "screwyou",
+                                         "shit", "slut", "whore", "arse", "cock", "gook"};
         for (String word : flagWord) {
             if (keyPhrases.contains(word)) {
                 flag();
@@ -394,7 +395,7 @@ public class MainUI extends javax.swing.JFrame {
                     null,
                     options1,
                     options1[1]);
-        if (n == 1) {
+        if (n1 == 1) {
             try {
                 String url_open = "https://www.rainn.org/articles/what-is-consent";
                 java.awt.Desktop.getDesktop().browse(java.net.URI.create(url_open));   
