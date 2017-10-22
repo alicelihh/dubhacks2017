@@ -62,7 +62,7 @@ public class DetectLanguage {
 
 // NOTE: Free trial access keys are generated in the westcentralus region, so if you are using
 // a free trial access key, you should not need to change this region.
-    static String host = "https://westus.api.cognitive.microsoft.com";
+    static String host = "https://westcentralus.api.cognitive.microsoft.com";
 
     static String path = "/text/analytics/v2.0/languages";
 
