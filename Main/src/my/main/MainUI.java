@@ -9,6 +9,8 @@ import java.io.*;
 import java.net.*;
 import java.util.*;
 import javax.net.ssl.HttpsURLConnection;
+import java.net.URL;
+import javax.swing.*;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -214,15 +216,12 @@ public class MainUI extends javax.swing.JFrame {
         try {
             my.main.Documents getSentimentDocument = new my.main.Documents ();
             getSentimentDocument.add ("1", "en", message);
-            //getSentimentDocument.add ("2", "es", "Este ha sido un dia terrible, llegué tarde al trabajo debido a un accidente automobilistico.");
-
+            
             String responseOne = GetSentiment (getSentimentDocument);
             System.out.println (prettify (responseOne));
         
             my.main.Documents getKeyPhrasesDocument = new my.main.Documents ();
             getKeyPhrasesDocument.add ("1", "en", message);
-//            getKeyPhrasesDocument.add ("2", "es", "Si usted quiere comunicarse con Carlos, usted debe de llamarlo a su telefono movil. Carlos es muy responsable, pero necesita recibir una notificacion si hay algun problema.");
-//            getKeyPhrasesDocument.add ("3", "en", "The Grand Hotel is a new hotel in the center of Seattle. It earned 5 stars in my review, and has the classiest decor I've ever seen.");
 
             String responseTwo = GetKeyPhrases (getKeyPhrasesDocument);
             System.out.println (prettify (responseTwo));
@@ -230,6 +229,47 @@ public class MainUI extends javax.swing.JFrame {
         catch (Exception e) {
             System.out.println (e);
         }
+        
+        Object[] options = {"Yes", "Not at all"};
+        int n = JOptionPane.showOptionDialog(
+                null, 
+                "Are you offended by his/her words? \n Innapropriate word(s) detected!", 
+                "Inquiry", 
+                JOptionPane.YES_NO_OPTION,
+                JOptionPane.QUESTION_MESSAGE,
+                null,
+                options,
+                options[0]);
+        if (n == 0) {
+            try {
+                String url_open = "https://www.google.com/";
+                java.awt.Desktop.getDesktop().browse(java.net.URI.create(url_open));   
+            }
+            catch (Exception e) {
+                System.out.println(e);
+            }
+        }
+        
+        Object[] options1 = {"Detail Info", "Cancel"};
+        int n1 = JOptionPane.showOptionDialog(
+                    null, 
+                    "You might have entered something inappropriate!",
+                    "Warning",
+                    JOptionPane.OK_CANCEL_OPTION,
+                    JOptionPane.WARNING_MESSAGE,
+                    null,
+                    options,
+                    options[0]);
+        if (n == 0) {
+            try {
+                String url_open = "https://www.google.com/";
+                java.awt.Desktop.getDesktop().browse(java.net.URI.create(url_open));   
+            }
+            catch (Exception e) {
+                System.out.println(e);
+            }
+        }
+        
     }//GEN-LAST:event_jButton1ActionPerformed
 
     /**
