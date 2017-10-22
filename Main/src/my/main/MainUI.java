@@ -218,8 +218,9 @@ public class MainUI extends javax.swing.JFrame {
             getSentimentDocument.add ("1", "en", message);
             
             String responseOne = GetSentiment (getSentimentDocument);
-            responseOne = prettify (responseOne);
-            testSentiment(responseOne);
+            // responseOne = prettify (responseOne);
+            // System.out.println(responseOne);
+            testSentiment(responseOne, message);
             //System.out.println (prettify (responseOne));
         
 //            my.main.Documents getKeyPhrasesDocument = new my.main.Documents ();
@@ -231,47 +232,6 @@ public class MainUI extends javax.swing.JFrame {
         catch (Exception e) {
             System.out.println (e);
         }
-        
-//        Object[] options = {"Yes", "Not at all"};
-//        int n = JOptionPane.showOptionDialog(
-//                null, 
-//                "Are you offended by his/her words? \n Innapropriate word(s) detected!", 
-//                "Inquiry", 
-//                JOptionPane.YES_NO_OPTION,
-//                JOptionPane.QUESTION_MESSAGE,
-//                null,
-//                options,
-//                options[0]);
-//        if (n == 0) {
-//            try {
-//                String url_open = "https://www.google.com/";
-//                java.awt.Desktop.getDesktop().browse(java.net.URI.create(url_open));   
-//            }
-//            catch (Exception e) {
-//                System.out.println(e);
-//            }
-//        }
-//        
-//        Object[] options1 = {"Detail Info", "Cancel"};
-//        int n1 = JOptionPane.showOptionDialog(
-//                    null, 
-//                    "You might have entered something inappropriate!",
-//                    "Warning",
-//                    JOptionPane.OK_CANCEL_OPTION,
-//                    JOptionPane.WARNING_MESSAGE,
-//                    null,
-//                    options,
-//                    options[0]);
-//        if (n == 0) {
-//            try {
-//                String url_open = "https://www.google.com/";
-//                java.awt.Desktop.getDesktop().browse(java.net.URI.create(url_open));   
-//            }
-//            catch (Exception e) {
-//                System.out.println(e);
-//            }
-//        }
-        
     }//GEN-LAST:event_jButton1ActionPerformed
 
     /**
@@ -374,16 +334,16 @@ public class MainUI extends javax.swing.JFrame {
         return gson.toJson(json);
     }
     
-    public static void testSentiment(String sentiment) {
-        double sentimentScore = Double.parseDouble(sentiment.substring(23, 30));
+    public static void testSentiment(String sentiment, String message) {
+        double sentimentScore = Double.parseDouble(sentiment.substring(23, sentiment.length()-24));
         if (sentimentScore < .2) {
             String keyPhrases = "";
             Documents getKeyPhrasesDocument = new Documents ();
-            getKeyPhrasesDocument.add ("1", "en", "I really enjoy the new XBox One S. It has a clean look, it has 4K/HDR resolution and it is affordable.");
+            getKeyPhrasesDocument.add ("1", "en", message);
             
             try {
                 keyPhrases = GetKeyPhrases (getKeyPhrasesDocument);
-                keyPhrases = prettify (keyPhrases);
+                // keyPhrases = prettify (keyPhrases);
                 // System.out.println (prettify (keyPhrases));
             } 
             catch (Exception e) {
@@ -394,7 +354,7 @@ public class MainUI extends javax.swing.JFrame {
     }
     
     public static void testKeyPhrases(String keyPhrases){
-        String[] flagWord = new String[]{"a", "b", "c", "d"};
+        String[] flagWord = new String[]{"freaks", "horny", "wild", "terrible"};
         for (String word : flagWord) {
             if (keyPhrases.contains(word)) {
                 flag();
