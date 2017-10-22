@@ -364,19 +364,19 @@ public class MainUI extends javax.swing.JFrame {
     }
     
     public static void flag(){
-        Object[] options = {"Yes", "Not at all"};
+        Object[] options = {"Close", "Learn More"};
         int n = JOptionPane.showOptionDialog(
                 null, 
-                "Are you offended by his/her words? \n Innapropriate word(s) detected!", 
+                "We've detected innapropriate language. \nRemember, you should never feel unsafe or pressured! \nHere are some resources to help protect yourself \n", 
                 "Inquiry", 
                 JOptionPane.YES_NO_OPTION,
                 JOptionPane.QUESTION_MESSAGE,
                 null,
                 options,
-                options[0]);
-        if (n == 0) {
+                options[1]);
+        if (n == 1) {
             try {
-                String url_open = "https://www.google.com/";
+                String url_open = "https://www.rainn.org/articles/how-respond-if-someone-pressuring-you";
                 java.awt.Desktop.getDesktop().browse(java.net.URI.create(url_open));   
             }
             catch (Exception e) {
@@ -384,19 +384,19 @@ public class MainUI extends javax.swing.JFrame {
             }
         }
         
-        Object[] options1 = {"Detail Info", "Cancel"};
+        Object[] options1 = {"Cancel","Learn More"};
         int n1 = JOptionPane.showOptionDialog(
                     null, 
-                    "You might have entered something inappropriate!",
+                    "We've detected you entered something inappropriate! \nWe suggest you review these resources.",
                     "Warning",
                     JOptionPane.OK_CANCEL_OPTION,
                     JOptionPane.WARNING_MESSAGE,
                     null,
-                    options,
-                    options[0]);
-        if (n == 0) {
+                    options1,
+                    options1[1]);
+        if (n == 1) {
             try {
-                String url_open = "https://www.google.com/";
+                String url_open = "https://www.rainn.org/articles/what-is-consent";
                 java.awt.Desktop.getDesktop().browse(java.net.URI.create(url_open));   
             }
             catch (Exception e) {
