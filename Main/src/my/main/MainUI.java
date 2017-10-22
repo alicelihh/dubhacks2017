@@ -5,13 +5,48 @@
  */
 package my.main;
 
+import java.io.*;
+import java.net.*;
+import java.util.*;
+import javax.net.ssl.HttpsURLConnection;
+
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 import java.util.Scanner;
+import javax.swing.JOptionPane;
+
+
+class Document {
+    public String id, language, text;
+
+    public Document(String id, String language, String text){
+        this.id = id;
+        this.language = language;
+        this.text = text;
+    }
+}
+
+class Documents {
+    public List<Document> documents;
+
+    public Documents() {
+        this.documents = new ArrayList<Document>();
+    }
+    public void add(String id, String language, String text) {
+        this.documents.add (new Document (id, language, text));
+    }
+}
 
 /**
  *
  * @author saiharshita
  */
 public class MainUI extends javax.swing.JFrame {
+    
+    static String accessKey = "b7f914450ca64905afc8f5050d98958b";
+    static String host = "https://westcentralus.api.cognitive.microsoft.com";
 
     /**
      * Creates new form MainUI
@@ -45,6 +80,7 @@ public class MainUI extends javax.swing.JFrame {
         jTextField3 = new javax.swing.JTextField();
         jLabel2 = new javax.swing.JLabel();
         jTextField4 = new javax.swing.JTextField();
+        jDesktopPane1 = new javax.swing.JDesktopPane();
         jInternalFrame1 = new javax.swing.JInternalFrame();
         jTextField2 = new javax.swing.JTextField();
         jButton1 = new javax.swing.JButton();
@@ -139,7 +175,7 @@ public class MainUI extends javax.swing.JFrame {
                         .addGap(18, 18, 18)
                         .addComponent(jButton1))
                     .addComponent(jScrollPane6, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(0, 15, Short.MAX_VALUE))
+                .addGap(0, 126, Short.MAX_VALUE))
         );
         jInternalFrame1Layout.setVerticalGroup(
             jInternalFrame1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -148,7 +184,7 @@ public class MainUI extends javax.swing.JFrame {
                 .addComponent(jScrollPane5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jScrollPane6, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 7, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 365, Short.MAX_VALUE)
                 .addGroup(jInternalFrame1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, 49, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jButton1)))
@@ -175,7 +211,25 @@ public class MainUI extends javax.swing.JFrame {
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         String message;
         message = jTextField2.getText();
-        System.out.println(message); 
+        try {
+            my.main.Documents getSentimentDocument = new my.main.Documents ();
+            getSentimentDocument.add ("1", "en", message);
+            //getSentimentDocument.add ("2", "es", "Este ha sido un dia terrible, llegué tarde al trabajo debido a un accidente automobilistico.");
+
+            String responseOne = GetSentiment (getSentimentDocument);
+            System.out.println (prettify (responseOne));
+        
+            my.main.Documents getKeyPhrasesDocument = new my.main.Documents ();
+            getKeyPhrasesDocument.add ("1", "en", message);
+//            getKeyPhrasesDocument.add ("2", "es", "Si usted quiere comunicarse con Carlos, usted debe de llamarlo a su telefono movil. Carlos es muy responsable, pero necesita recibir una notificacion si hay algun problema.");
+//            getKeyPhrasesDocument.add ("3", "en", "The Grand Hotel is a new hotel in the center of Seattle. It earned 5 stars in my review, and has the classiest decor I've ever seen.");
+
+            String responseTwo = GetKeyPhrases (getKeyPhrasesDocument);
+            System.out.println (prettify (responseTwo));
+        }
+        catch (Exception e) {
+            System.out.println (e);
+        }
     }//GEN-LAST:event_jButton1ActionPerformed
 
     /**
@@ -212,10 +266,76 @@ public class MainUI extends javax.swing.JFrame {
             }
         });
     }
+    
+    public static String GetSentiment (my.main.Documents documents) throws Exception {
+        
+        String path = "/text/analytics/v2.0/sentiment";
+        String text = new Gson().toJson(documents);
+        byte[] encoded_text = text.getBytes("UTF-8");
+
+        URL url = new URL(host+path);
+        HttpsURLConnection connection = (HttpsURLConnection) url.openConnection();
+        connection.setRequestMethod("POST");
+        connection.setRequestProperty("Content-Type", "text/json");
+        connection.setRequestProperty("Ocp-Apim-Subscription-Key", accessKey);
+        connection.setDoOutput(true);
+
+        DataOutputStream wr = new DataOutputStream(connection.getOutputStream());
+        wr.write(encoded_text, 0, encoded_text.length);
+        wr.flush();
+        wr.close();
+
+        StringBuilder response = new StringBuilder ();
+        BufferedReader in = new BufferedReader(
+        new InputStreamReader(connection.getInputStream()));
+        String line;
+        while ((line = in.readLine()) != null) {
+            response.append(line);
+        }
+        in.close();
+
+        return response.toString();
+    }
+    
+    public static String GetKeyPhrases (my.main.Documents documents) throws Exception {
+        String path = "/text/analytics/v2.0/keyPhrases";
+        String text = new Gson().toJson(documents);
+        byte[] encoded_text = text.getBytes("UTF-8");
+
+        URL url = new URL(host+path);
+        HttpsURLConnection connection = (HttpsURLConnection) url.openConnection();
+        connection.setRequestMethod("POST");
+        connection.setRequestProperty("Content-Type", "text/json");
+        connection.setRequestProperty("Ocp-Apim-Subscription-Key", accessKey);
+        connection.setDoOutput(true);
+
+        DataOutputStream wr = new DataOutputStream(connection.getOutputStream());
+        wr.write(encoded_text, 0, encoded_text.length);
+        wr.flush();
+        wr.close();
+
+        StringBuilder response = new StringBuilder ();
+        BufferedReader in = new BufferedReader(
+        new InputStreamReader(connection.getInputStream()));
+        String line;
+        while ((line = in.readLine()) != null) {
+            response.append(line);
+        }
+        in.close();
+        return response.toString();
+    }
+    
+    public static String prettify(String json_text) {
+        JsonParser parser = new JsonParser();
+        JsonObject json = parser.parse(json_text).getAsJsonObject();
+        Gson gson = new GsonBuilder().setPrettyPrinting().create();
+        return gson.toJson(json);
+    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButton1;
     private javax.swing.JComboBox<String> jComboBox1;
+    private javax.swing.JDesktopPane jDesktopPane1;
     private javax.swing.JInternalFrame jInternalFrame1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
