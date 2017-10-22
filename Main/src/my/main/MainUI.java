@@ -416,7 +416,8 @@ public class MainUI extends javax.swing.JFrame {
     }
     
     public static void testKeyPhrases(String keyPhrases){
-        String[] flagWord = new String[]{"freaks", "horny", "wild", "terrible"};
+        String[] flagWord = new String[]{"wild", "dumbass", "horny", "screwyou",
+                                         "shit", "slut", "whore", "arse", "cock", "gook"};
         for (String word : flagWord) {
             if (keyPhrases.contains(word)) {
                 flag();
@@ -465,7 +466,6 @@ public class MainUI extends javax.swing.JFrame {
                 System.out.println(e);
             }
         }
-        
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
