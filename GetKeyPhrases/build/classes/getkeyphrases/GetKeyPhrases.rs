@@ -1,3 +1,0 @@
-getkeyphrases.Documents
-getkeyphrases.GetKeyPhrases
-getkeyphrases.Document
