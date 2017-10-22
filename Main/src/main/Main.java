@@ -47,26 +47,22 @@ public class Main {
     /**
      * @param args the command line arguments
      */
-    public static void main(String[] args) {        
+    public static void main(String[] args) {
+        String sentimentAnalysis = "";
+        String keyPhrases = "";
         try {
             Documents getSentimentDocument = new Documents ();
             getSentimentDocument.add ("1", "en", "I really enjoy the new XBox One S. It has a clean look, it has 4K/HDR resolution and it is affordable.");
             getSentimentDocument.add ("2", "es", "Este ha sido un dia terrible, llegué tarde al trabajo debido a un accidente automobilistico.");
 
-            String responseOne = GetSentiment (getSentimentDocument);
-            System.out.println (prettify (responseOne));
+            sentimentAnalysis = GetSentiment (getSentimentDocument);
+            System.out.println (prettify (sentimentAnalysis));
             
-            Documents getKeyPhrasesDocument = new Documents ();
-            getKeyPhrasesDocument.add ("1", "en", "I really enjoy the new XBox One S. It has a clean look, it has 4K/HDR resolution and it is affordable.");
-            getKeyPhrasesDocument.add ("2", "es", "Si usted quiere comunicarse con Carlos, usted debe de llamarlo a su telefono movil. Carlos es muy responsable, pero necesita recibir una notificacion si hay algun problema.");
-            getKeyPhrasesDocument.add ("3", "en", "The Grand Hotel is a new hotel in the center of Seattle. It earned 5 stars in my review, and has the classiest decor I've ever seen.");
-
-            String responseTwo = GetKeyPhrases (getKeyPhrasesDocument);
-            System.out.println (prettify (responseTwo));
         }
         catch (Exception e) {
             System.out.println (e);
         }
+        testSentiment(sentimentAnalysis);
     }
     
     public static String GetSentiment (Documents documents) throws Exception {
@@ -132,6 +128,38 @@ public class Main {
         JsonObject json = parser.parse(json_text).getAsJsonObject();
         Gson gson = new GsonBuilder().setPrettyPrinting().create();
         return gson.toJson(json);
+    }
+    
+    public static void testSentiment(String sentiment) {
+        double sentimentScore = Double.parseDouble(sentiment.substring(23, 30));
+        if (sentimentScore < 1) {
+            String keyPhrases = "";
+            Documents getKeyPhrasesDocument = new Documents ();
+            getKeyPhrasesDocument.add ("1", "en", "I really enjoy the new XBox One S. It has a clean look, it has 4K/HDR resolution and it is affordable.");
+            
+            try {
+                keyPhrases = GetKeyPhrases (getKeyPhrasesDocument);
+                System.out.println (prettify (keyPhrases));
+            } 
+            catch (Exception e) {
+                System.out.println (e);
+            }
+            testKeyPhrases(keyPhrases);
+        }
+    }
+    
+    public static void testKeyPhrases(String keyPhrases){
+        String[] flagWord = new String[]{"a", "b", "c", "d"};
+        for (String word : flagWord) {
+            if (keyPhrases.contains(word)) {
+                flag();
+                break;
+            }
+        }
+    }
+    
+    public static void flag(){
+        // do something to call the popups.
     }
     
 }
